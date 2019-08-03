@@ -6,7 +6,7 @@ struct list_t {
 	struct list_t * node;
 };
 
-struct list_t * prepend(struct list_t * list, int value) {
+static struct list_t * prepend(struct list_t * list, int value) {
 	struct list_t * next = malloc(sizeof(struct list_t));
 	next->value = value;
 	next->node = list;
