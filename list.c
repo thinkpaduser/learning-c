@@ -36,6 +36,15 @@ static int cb_indexer(int value, void * userdata) { /* Callback indexer - prints
 	return 0;
 }
 
+static int cb_finder(int value, void * userdata) { /* Callback finder - finds an element by specified index */
+	struct list_meta * metadata = userdata;
+	metadata->counter++;
+	if (metadata->counter == metadata->index) {
+		printf("Found %d by %d index\n", value, metadata->index);
+	}
+	return 0;
+}
+
 static void traverse(struct list_t * list, int (*callback)(int, void *), void * userdata) {
 	if (list != NULL) {
 		int result = callback(list->value, userdata);
@@ -56,8 +65,10 @@ int main() {
 	list = prepend(list, 13);
 	list = remfirst(list);
 	metadata.counter = 0;
-	metadata.index = 0;
+	metadata.index = 2;
 	/* traverse(list, cb_printer, NULL); prints only a value of the each list element - replaced with cb_indexer */
 	traverse(list, cb_indexer, &metadata);
+	metadata.counter = 0;
+	traverse(list, cb_finder, &metadata);
 	return 0;
 }
