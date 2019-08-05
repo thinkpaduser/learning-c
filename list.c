@@ -65,7 +65,7 @@ int main() {
 	list = prepend(list, 13);
 	list = remfirst(list);
 	metadata.counter = 0;
-	metadata.index = 5;
+	metadata.index = 2;
 	/* traverse(list, cb_printer, NULL); prints only a value of the each list element - replaced with cb_indexer */
 	traverse(list, cb_indexer, &metadata);
 	metadata.counter = 0;
