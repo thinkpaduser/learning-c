@@ -18,19 +18,29 @@ static struct list_t * remfirst(struct list_t * list) {
 	free(list);
 	return prev;
 }
-static int cbprintr(int data, void * userdata){
+static int cb_printer(int value, void * userdata){ /* Callback printer - just prints each list element's value */
+	printf("%d\n", value);
 	return 0;
 }
 
 static void traverse(struct list_t * list, int (*callback)(int, void *), void * userdata) {
-	/* Todo: list traverse func; callback func to printf list->values etc */
+	if (list != NULL) {
+		int result = callback(list->value, userdata);
+		if (result) {
+			return;
+		}
+		traverse(list->node, callback, userdata);
+	}
+	return;
 }
 
 int main() {
 	struct list_t * list = NULL;
 	list = prepend(list, 10);
 	list = prepend(list, 11);
+	list = prepend(list, 12);
+	list = prepend(list, 13);
 	list = remfirst(list);
-	printf("%d\n", list->value);
+	traverse(list, cb_printer, NULL);
 	return 0;
 }
