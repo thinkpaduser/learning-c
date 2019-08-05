@@ -29,7 +29,7 @@ static int cb_printer(int value, void * userdata) { /* Callback printer - just p
 	return 0;
 }
 
-static int cb_indexer(int value, void * userdata) {
+static int cb_indexer(int value, void * userdata) { /* Callback indexer - prints each list element's value and 'index' */
 	struct list_meta * metadata = userdata;
 	metadata->counter++;
 	printf("Value %d has index %d\n", value, metadata->counter);
