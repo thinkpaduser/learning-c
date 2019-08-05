@@ -29,6 +29,13 @@ static int cb_printer(int value, void * userdata) { /* Callback printer - just p
 	return 0;
 }
 
+static int cb_indexer(int value, void * userdata) {
+	struct list_meta * metadata = userdata;
+	metadata->counter++;
+	printf("Value %d has index %d\n", value, metadata->counter);
+	return 0;
+}
+
 static void traverse(struct list_t * list, int (*callback)(int, void *), void * userdata) {
 	if (list != NULL) {
 		int result = callback(list->value, userdata);
@@ -42,12 +49,15 @@ static void traverse(struct list_t * list, int (*callback)(int, void *), void * 
 
 int main() {
 	struct list_t * list = NULL;
-	struct list_meta * metadata = NULL; /* Metadata for: 1. Search by index; 2. Count the length */
+	struct list_meta metadata; /* Metadata for: 1. Search by index; 2. Count the length */
 	list = prepend(list, 10);
 	list = prepend(list, 11);
 	list = prepend(list, 12);
 	list = prepend(list, 13);
 	list = remfirst(list);
-	traverse(list, cb_printer, NULL);
+	metadata.counter = 0;
+	metadata.index = 0;
+	/* traverse(list, cb_printer, NULL); prints only a value of the each list element - replaced with cb_indexer */
+	traverse(list, cb_indexer, &metadata);
 	return 0;
 }
