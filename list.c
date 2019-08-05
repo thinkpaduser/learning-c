@@ -18,6 +18,13 @@ static struct list_t * remfirst(struct list_t * list) {
 	free(list);
 	return prev;
 }
+static int cbprintr(int data, void * userdata){
+	return 0;
+}
+
+static void traverse(struct list_t * list, int (*callback)(int, void *), void * userdata) {
+	/* Todo: list traverse func; callback func to printf list->values etc */
+}
 
 int main() {
 	struct list_t * list = NULL;
