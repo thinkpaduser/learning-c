@@ -9,11 +9,16 @@ struct btree_t {
 
 struct btree_t * addnode (struct btree_t * tree, int value){
 	/* TODO: Add a new node to binary tree */
-	return someptr;
+	if (tree == NULL) {
+		tree = malloc(sizeof(struct btree_t));
+		tree->value = value;
+	}
+	return tree;
 }
 
 int main() {
 	struct btree_t * tree = NULL;
 	tree = addnode(tree, 10);
+	printf("%d\n", tree->value);
 	return 0;
 }
