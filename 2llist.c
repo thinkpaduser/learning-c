@@ -12,6 +12,7 @@ dlist_t * prepend(struct dlist_t * list, int value) {  /* Also used as init() pr
 		dlist_t * next = malloc(sizeof(dlist_t));
 		next->value = value;
 		list->next = next;
+		return list;
 	}
 	list = malloc(sizeof(dlist_t));                /* Initialize root element here */
 	list->value = value;
@@ -29,7 +30,6 @@ void print_root(dlist_t * list) {
 
 dlist_t * next(dlist_t * list) {
 	if (list->next == NULL) {
-		printf("Next element does not exist\n");
 		return NULL;
 	}
 	return list->next;
@@ -37,7 +37,6 @@ dlist_t * next(dlist_t * list) {
 
 dlist_t * prev(dlist_t * list) {
 	if (list->prev == NULL) {
-		printf("Previous element does not exist\n");
 		return NULL;
 	}
 	return list->prev;
@@ -48,9 +47,16 @@ dlist_t * rm_first(dlist_t * list){
 	return list;
 }
 
+void traverse(dlist_t * list) {
+	/* TODO: traverse the list */
+}
+
+
 int main(void) {
 	dlist_t * new_list; /* == NULL */
 	new_list = prepend(new_list, 228);
+	new_list = prepend(new_list, 1337);
 	print_root(new_list);
+	print_root(new_list->next);
 	return 0;
 }
