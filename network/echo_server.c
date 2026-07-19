@@ -62,7 +62,6 @@ int main(int argc, char ** argv) {
 		socklen_t client_len = sizeof(client_addr);
 		client_fd = accept(fd, (struct sockaddr *)&client_addr, &client_len);
 		if (client_fd < 0) {
-			close(client_fd);
 			continue;
 		};
 
@@ -78,11 +77,9 @@ int main(int argc, char ** argv) {
 				printf("[>] sent those bytes back\n");
 			} else if (bytes_read == 0) {
 				printf("[!] Client disconnected\n");
-				close(client_fd);
 				break;
 			} else {
 				printf("[X] Error while reading from client\n");
-				close(client_fd);
 				break;
 			};
 		};
