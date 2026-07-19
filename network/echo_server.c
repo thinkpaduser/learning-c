@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <signal.h>
+#include <errno.h>
 
 /* ********************
  * man 5 protocols
@@ -29,7 +30,6 @@ int main(int argc, char ** argv) {
 		return 11;
 	};
 
-	int errno;
 	int fd;
 
 	struct sockaddr_in addr = {
