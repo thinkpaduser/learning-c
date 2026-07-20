@@ -81,17 +81,22 @@ int main(int argc, char ** argv) {
 			char buf[1025]; // leaving the space for \0
 			ssize_t bytes_read;
 			bytes_read = read(client_fd, buf, MAX_SIZE);
-			if (bytes_read > 0) {
-				printf("[<] read %d bytes from a client\n", (int)bytes_read);
-				write(client_fd, buf, bytes_read);
-				printf("[>] sent those bytes back\n");
-			} else if (bytes_read == 0) {
-				printf("[!] Client disconnected\n");
-				break;
-			} else {
+			if (bytes_read < 0) {
 				printf("[X] Error while reading from client\n");
 				break;
 			};
+			if (bytes_read == 0) {
+				printf("[!] Client disconnected\n");
+				break;
+			};
+
+			printf("[<] read %d bytes from a client\n", (int)bytes_read);
+
+			if (write(client_fd, buf, bytes_read) != bytes_read) {
+				printf("[X] Error while writing response\n");
+				break;
+			};
+			printf("[>] sent those bytes back\n");
 		};
 		close(client_fd);
 	};
