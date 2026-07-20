@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -7,10 +8,7 @@
 #include <signal.h>
 #include <errno.h>
 
-/* ********************
- * man 5 protocols
- * man 2 socket
- * ****************** */
+#define MAX_SIZE 1024
 
 volatile sig_atomic_t stopped = 0;
 
@@ -20,6 +18,19 @@ void handle_sigint(int sig) {
 
 
 int main(int argc, char ** argv) {
+	if (argc < 2) {
+		printf("usage: %s PORT\n", argv[0]);
+		return 1;
+	};
+
+	const char * str_port = argv[1];
+	int port = atoi(str_port);
+
+	if (port < 1 || port > 65535) {
+		printf("invalid port number (should be in range 1-65535)\n");
+		return 1;
+	};
+
 	struct sigaction sa = {0};
 	sa.sa_handler = handle_sigint;
 	sa.sa_flags = 0;
@@ -34,28 +45,28 @@ int main(int argc, char ** argv) {
 
 	struct sockaddr_in addr = {
 		.sin_family = AF_INET,
-		.sin_port = htons(8080),
+		.sin_port = htons(port),
 		.sin_addr.s_addr = htonl(INADDR_LOOPBACK),
 	};
 
 	fd = socket(PF_INET, SOCK_STREAM, 0);
 	if (fd < 0) {
-		printf("%d\n", errno);
+		perror("socket");
 		return 1;
 	};
 
 	if (bind(fd,(struct sockaddr *)&addr, sizeof(addr)) != 0) {
 		close(fd);
-		printf("%d\n", errno);
+		perror("bind");
 		return 2;
 	};
 
 	if (listen(fd, 1) < 0) {
 		close(fd);
-		printf("%d\n", errno);
+		perror("listen");
 		return 3;
 	};
-	printf("[*] Listening at 127.0.0.1:8080...\n"); // yeah, this is hardcoded for now
+	printf("[*] Listening at 127.0.0.1:%d...\n", port); // well port is not hardcoded anymore
 	while (!stopped) {
 		int client_fd;
 		struct sockaddr_in client_addr = {0};
@@ -68,7 +79,6 @@ int main(int argc, char ** argv) {
 		for (;;) {
 			printf("[!] Accepted new connection\n");
 			char buf[1025]; // leaving the space for \0
-			int MAX_SIZE = 1024;
 			ssize_t bytes_read;
 			bytes_read = read(client_fd, buf, MAX_SIZE);
 			if (bytes_read > 0) {
