@@ -12,7 +12,7 @@
 
 int main(int argc, char ** argv) {
 	if (argc < 3) {
-		printf("usage: %s IP PORT\n", argv[0]);
+		printf("usage: %s IPv4 PORT\n", argv[0]);
 		return 1;
 	};
 	const char * host_arg = argv[1];
@@ -25,7 +25,15 @@ int main(int argc, char ** argv) {
 		.sin_port = htons(port),
 	};
 
-	inet_pton(AF_INET, host_arg, &(addr.sin_addr));
+	if (inet_pton(AF_INET, host_arg, &(addr.sin_addr)) < 1) {
+		printf("invalid IPv4 address\n");
+		return 1;
+	};
+
+	if (port < 1 || port > 65535) {
+		printf("invalid port number (should be in range 1-65535)\n");
+		return 1;
+	};
 
 	fd = socket(PF_INET, SOCK_STREAM, 0);
 	if (fd < 0) {
